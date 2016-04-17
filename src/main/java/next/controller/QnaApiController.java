@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import core.jdbc.DataAccessException;
 import next.CannotDeleteException;
+import next.annotation.LoginUser;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -31,14 +32,14 @@ public class QnaApiController {
 	private static final Logger log = LoggerFactory.getLogger(QnaApiController.class);
 	
 	@RequestMapping(value="/deleteQuestion", method=RequestMethod.DELETE)
-	public Result deleteQuestion(HttpSession session, Long questionId){
+	public Result deleteQuestion(@LoginUser User loginUser, Long questionId){
 
-    	if (!UserSessionUtils.isLogined(session)) {
+    	if (loginUser.isGuestUser()) {
 			return Result.fail("Login is required");
 		}
 		
 		try {
-			qnaService.deleteQuestion(questionId, UserSessionUtils.getUserFromSession(session));
+			qnaService.deleteQuestion(questionId, loginUser);
 			return Result.ok();
 		} catch (CannotDeleteException e) {
 			return Result.fail(e.getMessage());
@@ -51,14 +52,14 @@ public class QnaApiController {
 	}
 
 	@RequestMapping(value="/addAnswer", method=RequestMethod.PUT)
-	public Map<String,Object> addAnswer(HttpSession session, Long questionId, String contents){
+	public Map<String,Object> addAnswer(@LoginUser User loginUser, Long questionId, String contents){
 		Map<String,Object> result = new HashMap<String,Object>();
-		if (!UserSessionUtils.isLogined(session)) {
+		if (loginUser.isGuestUser()) {
 			result.put("result", Result.fail("Login is required"));
 			return result;
 		}
     	
-    	User user = UserSessionUtils.getUserFromSession(session);
+    	User user = loginUser;
 		Answer answer = new Answer(user.getUserId(), 
 				contents, 
 				questionId);
@@ -74,7 +75,7 @@ public class QnaApiController {
 
 
 	@RequestMapping(value="/deleteAnswer", method=RequestMethod.DELETE)
-	public Result deleteAnswer(HttpSession session, Long answerId){
+	public Result deleteAnswer(Long answerId){
         Result result;
 		try {
 			answerDao.delete(answerId);

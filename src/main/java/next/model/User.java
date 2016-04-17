@@ -68,6 +68,11 @@ public class User {
 	public boolean isSameUser(String newUserId) {
 		return userId.equals(newUserId);
 	}
+	
+	public boolean isGuestUser(){
+		if(userId == null) return true;
+		return false;
+	}
 
 	@Override
 	public int hashCode() {
@@ -110,4 +115,5 @@ public class User {
 	public String toString() {
 		return "User [userId=" + userId + ", name=" + name + ", email=" + email + "]";
 	}
+	
 }

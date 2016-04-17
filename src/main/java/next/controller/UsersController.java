@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import next.annotation.LoginUser;
 import next.dao.UserDao;
 import next.model.User;
 
@@ -21,8 +22,8 @@ public class UsersController {
 	private UserDao userDao = UserDao.getInstance();
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
-	public String index(HttpSession session, Model model) throws SQLException{
-    	if (!UserSessionUtils.isLogined(session)) {
+	public String index(@LoginUser User loginUser, Model model) throws SQLException{
+    	if (loginUser.isGuestUser()) {
 			return "redirect:/users/loginForm";
 		}
     	
@@ -70,15 +71,15 @@ public class UsersController {
 	}
 	
 	@RequestMapping(value="/profile", method=RequestMethod.GET)
-	public String profile(HttpSession session, String userId, Model model){
+	public String profile(String userId, Model model){
         model.addAttribute("user", userDao.findByUserId(userId));
         return "user/profile";
 	}
 	
 	@RequestMapping(value="/updateForm", method=RequestMethod.GET)
-	public String updateForm(HttpSession session, String userId, Model model){
+	public String updateForm(@LoginUser User loginUser, String userId, Model model){
 		User user = userDao.findByUserId(userId);
-    	if (!UserSessionUtils.isSameUser(session, user)) {
+    	if (!loginUser.isSameUser(user)) {
         	throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
         model.addAttribute("user", user);
@@ -86,9 +87,9 @@ public class UsersController {
 	}
 
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String update(HttpSession session, String userId, String password, String name, String email){	
+	public String update(@LoginUser User loginUser, String userId, String password, String name, String email){	
 		User user = userDao.findByUserId(userId);
-        if (!UserSessionUtils.isSameUser(session, user)) {
+        if (!loginUser.isSameUser(user)) {
         	throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
         User updateUser = new User(userId, password, name, email);
