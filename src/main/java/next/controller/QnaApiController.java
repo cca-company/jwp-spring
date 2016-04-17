@@ -30,7 +30,7 @@ public class QnaApiController {
 	private AnswerDao answerDao = AnswerDao.getInstance();
 	private static final Logger log = LoggerFactory.getLogger(QnaApiController.class);
 	
-	@RequestMapping(value="/deleteQuestion", method=RequestMethod.POST)
+	@RequestMapping(value="/deleteQuestion", method=RequestMethod.DELETE)
 	public Result deleteQuestion(HttpSession session, Long questionId){
 
     	if (!UserSessionUtils.isLogined(session)) {
@@ -50,7 +50,7 @@ public class QnaApiController {
 		return questionDao.findAll();
 	}
 
-	@RequestMapping(value="/addAnswer", method=RequestMethod.POST)
+	@RequestMapping(value="/addAnswer", method=RequestMethod.PUT)
 	public Map<String,Object> addAnswer(HttpSession session, Long questionId, String contents){
 		Map<String,Object> result = new HashMap<String,Object>();
 		if (!UserSessionUtils.isLogined(session)) {
@@ -73,7 +73,7 @@ public class QnaApiController {
 	}
 
 
-	@RequestMapping(value="/deleteAnswer", method=RequestMethod.POST)
+	@RequestMapping(value="/deleteAnswer", method=RequestMethod.DELETE)
 	public Result deleteAnswer(HttpSession session, Long answerId){
         Result result;
 		try {

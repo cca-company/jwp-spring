@@ -42,7 +42,7 @@ public class QnaController {
 		return "qna/form";
 	}
 	
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+	@RequestMapping(value="/create", method=RequestMethod.PUT)
 	public String create(HttpSession session, String title, String contents){
 		if (!UserSessionUtils.isLogined(session)) {
 			return "redirect:/users/loginForm";
@@ -81,7 +81,7 @@ public class QnaController {
 		return "redirect:/";
 	}
 
-	@RequestMapping(value="/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/delete", method=RequestMethod.DELETE)
 	public String delete(HttpSession session, Long questionId, Model model){
         Question question = questionDao.findById(questionId);
         List<Answer> answers = answerDao.findAllByQuestionId(questionId);

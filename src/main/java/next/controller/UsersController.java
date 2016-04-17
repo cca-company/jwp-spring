@@ -35,7 +35,7 @@ public class UsersController {
 		return "user/form";
 	}
 
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+	@RequestMapping(value="/create", method=RequestMethod.PUT)
 	public String create(User user){
 		log.debug("create user : {"+user+"}");
 		userDao.insert(user);

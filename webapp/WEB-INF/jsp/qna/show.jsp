@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!DOCTYPE html>
 <html lang="kr">
@@ -42,10 +43,10 @@
 								<a class="link-modify-article" href="/qna/updateForm?questionId=${question.questionId}">수정</a>
 							</li>
 							<li>
-								<form class="form-delete" action="/qna/delete" method="POST">
+								<form:form class="form-delete" action="/qna/delete" method="DELETE">
 									<input type="hidden" name="questionId" value="${question.questionId}" />
 									<button class="link-delete-article" type="submit">삭제</button>
-								</form>
+								</form:form>
 							</li>
 							<li>
 								<a class="link-modify-article" href="/">목록</a>
@@ -78,24 +79,24 @@
 											<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=${each.answerId}">수정</a>
 										</li>
 										<li>
-											<form class="form-delete" action="/api/qna/deleteAnswer" method="POST">
+											<form:form class="form-delete" action="/api/qna/deleteAnswer" method="DELETE">
 												<input type="hidden" name="answerId" value="${each.answerId}" />
 												<button type="submit" class="link-delete-article">삭제</button>
-											</form>
+											</form:form>
 										</li>
 									</ul>
 								</div>
 							</article>
                             </c:forEach>
 							<div class="answerWrite">
-                            <form name="answer" method="post">
+                            <form:form name="answer" method="PUT">
 								<input type="hidden" name="questionId" value="${question.questionId}">
 								<div class="form-group col-lg-12">
 									<textarea name="contents" id="contents" class="form-control" placeholder=""></textarea>
 								</div>
 								<input class="btn btn-success pull-right" type="submit" value="답변하기" />
 								<div class="clearfix" />
-							</form>
+							</form:form>
 							</div>
 						</div>
 					</div>
